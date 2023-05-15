@@ -6,4 +6,3 @@ This project is my initial attempt at creating a fully functional chess game. Th
 
 
 
-
