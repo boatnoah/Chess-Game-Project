@@ -5,6 +5,7 @@
 
 #Added board (prints and updates board), piece (added a pawn class that validates its moves), const files  --- 5/15/23
 
+#Added valid moves for rook. --- 5/16/23
 
 
 
