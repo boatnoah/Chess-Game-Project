@@ -1,46 +1,20 @@
 from const import *
 import math
+
+
+
 class Piece:
     def __init__(self, color: str, position: str):
         self.color = color
-        self.position = algebraic_notation[position]
-        self.is_taken = False
+        self.position = position
         self.is_pinned = False
     
-    def check_is_pinned(self, position: str):
-        x = algebraic_notation[position]
-        
-        
-        if self.color == "white":
-            if board[x[0] + 1][x[1]] == "♚":
-                self.is_pinned = True
-            else:
-                self.is_pinned = False
-        else:
-            if board[x[0] - 1][x[1]] == "♔":
-                self.is_pinned = True
-            else:
-                self.is_pinned = False
     
-    def is_king_in_check(self, kingposition: str):
-        k_current_position = current_position["king"][self.color][kingposition][0]
-        k_current_position = algebraic_notation[k_current_position]
+    def update_piece_position(self, position: str):
+        self.position = position
         
-        #check the king's vision and find if it detects any enemy piece
-        for i in range(k_current_position[0]):
-            if board[k_current_position[0] - i][k_current_position[1]] != "-":
-                if board[k_current_position[0] - i][k_current_position[1]] == "♚":
-                    return True
-                else:
-                    break
-        
-        
-        
-             
-                
-                
-        
-        
+    def check_if_pin(self):
+        pass
     
 class Pawn(Piece):
     def __init__(self, color, position):
@@ -73,13 +47,32 @@ class Pawn(Piece):
                     return True
             
              
-    def move(self, position: str, position2move: str):
-        self.current_position["pawn"][self.color][position] = position2move
-        self.moves_played.append(position2move)
+
         
+class Knight(Piece):
+    def __init__(self, color, position):
+        super().__init__(color, position)
+        
+    def is_valid_move(self, position, position2move):
+        x = algebraic_notation[position]
+        y = algebraic_notation[position2move]
+        
+        #check if position2move is a friendly piece if it is return false
+        if self.color == "white":
+            if board[y[0]][y[1]] in white_piceces:
+                return False
+        else:
+            if board[y[0]][y[1]] in black_pieces:
+                return False
+            
+        diff = [abs(x[0] - y[0]), abs(x[1] - y[1])]
+        
+        #differnce should [2,1] or [1,2]
+        if diff == [2,1] or diff == [1,2]:
+            return True
+        return False
     
-    def capture(self):
-        pass
+            
     
     
         
@@ -129,9 +122,149 @@ class Rook(Piece):
         else: 
             return False
         
+class Bishop(Piece):
+    def __init__(self, color, position):
+        super().__init__(color, position)
+        
+    def is_valid_move(self, position, position2move):
+        x = algebraic_notation[position]
+        y = algebraic_notation[position2move]
+        
+        #check if the position2move is a friendly piece if it is return false
+        if self.color == "white":
+            if board[y[0]][y[1]] in white_piceces:
+                return False
+        else:
+            if board[y[0]][y[1]] in black_pieces:
+                return False
+            
+        #check if there is any piece in the way between the two positions if so return false
+        if x[0] < y[0]:
+            if x[1] < y[1]:
+                for i in range(x[0]+1, y[0]):
+                    for j in range(x[1]+1, y[1]):
+                        if board[i][j] != "-":
+                            return False
+            else:
+                for i in range(x[0]+1, y[0]):
+                    for j in range(y[1]+1, x[1]):
+                        if board[i][j] != "-":
+                            return False     
+        else:
+            if x[1] < y[1]:
+                for i in range(y[0]+1, x[0]):
+                    for j in range(x[1]+1, y[1]):
+                        if board[i][j] != "-":
+                            return False
+            else:
+                for i in range(y[0]+1, x[0]):
+                    for j in range(y[1]+1, x[1]):
+                        if board[i][j] != "-":
+                            return False
+                        
+        diff = [abs(x[0] - y[0]), abs(x[1] - y[1])] 
+        
+        #check if the difference list and check if index 0 and 1 are the same
+        """The reason why we are checking if index 0 and 1 are the same is because all valid moves of a bishop have the same difference no matter how long."""
+        if diff[0] == diff[1] and self.is_pinned != True:
+            return True
+        return False  
+    
+    
+    
+    
+class Queen(Piece):
+    def __init__(self, color, position):
+        super().__init__(color, position)
+        
+    def is_valid_move(self, position, position2move):
+        x = algebraic_notation[position]
+        y = algebraic_notation[position2move]
+        
+        #check if the position2move is a friendly piece if it is return false
+        if self.color == "white":
+            if board[y[0]][y[1]] in white_piceces:
+                return False
+        else:
+            if board[y[0]][y[1]] in black_pieces:
+                return False
+        
+        #reuse logic from rook and bishop
+        #vertical
+        if x[0] < y[0]:
+            for i in range(x[0]+1, y[0]):
+                if board[i][x[1]] != "-":
+                    return False
+        else:
+            for i in range(y[0]+1, x[0]):
+                if board[i][x[1]] != "-":
+                    return False
+        
+        #horizontal
+        if x[1] < y[1]:
+            for i in range(x[1]+1, y[1]):
+                if board[x[0]][i] != "-":
+                    return False
+        else:
+            for i in range(y[1]+1, x[1]):
+                if board[x[0]][i] != "-":
+                    return False
+                
+                
+        #diagonal
+        if x[0] < y[0]:
+            if x[1] < y[1]:
+                for i in range(x[0]+1, y[0]):
+                    for j in range(x[1]+1, y[1]):
+                        if board[i][j] != "-":
+                            return False
+            else:
+                for i in range(x[0]+1, y[0]):
+                    for j in range(y[1]+1, x[1]):
+                        if board[i][j] != "-":
+                            return False     
+        else:
+            if x[1] < y[1]:
+                for i in range(y[0]+1, x[0]):
+                    for j in range(x[1]+1, y[1]):
+                        if board[i][j] != "-":
+                            return False
+            else:
+                for i in range(y[0]+1, x[0]):
+                    for j in range(y[1]+1, x[1]):
+                        if board[i][j] != "-":
+                            return False
+        diff = [abs(x[0] - y[0]), abs(x[1] - y[1])]
+        
+        if diff[0] == diff[1] or diff[0] == 0 or diff[1] == 0 and self.is_pinned != True:
+            return True
+        return False
+    
+class King(Piece):
+    def __init__(self, color, position):
+        super().__init__(color, position)
+        self.is_in_check = False
+        self.can_castle = False
+    
+    def is_valid_move(self, position, position2move):
+        x = algebraic_notation[position]
+        y = algebraic_notation[position2move]
+        diff = [abs(x[0] - y[0]), abs(x[1] - y[1])]
+        #check if position2move is a friendly piece if it is return false
+        if self.color == "white":
+            if board[y[0]][y[1]] in white_piceces:
+                return False
+        else:
+            if board[y[0]][y[1]] in black_pieces:
+                return False
         
         
-rook = Rook("white", "a1")
-print(rook.is_valid_move("e4", "c6"))
+        #check if the distance is from x to y is [1, 0] or [0, 1] or [1, 1]      
+        if diff == [1, 1] or diff == [1, 0] or diff == [0, 1]:
+            return True
+        return False
+
+
+
 
 

@@ -7,6 +7,8 @@
 
 #Added valid moves for rook. --- 5/16/23
 
+#added valid moves for queen, bishop, knight --- 5/17/23
+
 
 
 
