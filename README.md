@@ -9,7 +9,7 @@
 
 #added valid moves for queen, bishop, knight --- 5/17/23
 
-
+#added a main file more, functionality, a working game --- 5/22/23
 
 
 

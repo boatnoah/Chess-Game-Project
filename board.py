@@ -6,9 +6,11 @@ class Board:
 #display the board
     def display_board(self):
         print("     a    b    c    d    e    f    g    h")                                       
-        print("   -----------------------------------------")                  
+        print("   -----------------------------------------") 
+        j = 8          
         for i, row in enumerate(board, 1):
-            print(end=str(i) + "    ")
+            print(end=str(j) + "    ")
+            j -= 1
             for col in row:
                 print(col, end="    ")
             print()
@@ -20,8 +22,8 @@ class Board:
            
 #updates board with new piece     
     def update_board(self, position: str, position2move: str):
-        current_position = self.algebraic_notation[position] 
-        position_to_move = self.algebraic_notation[position2move]
+        current_position = algebraic_notation[position] 
+        position_to_move = algebraic_notation[position2move]
         
         board[position_to_move[0]][position_to_move[1]] = board[current_position[0]][current_position[1]]
         board[current_position[0]][current_position[1]] = "-"
