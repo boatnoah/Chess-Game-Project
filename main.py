@@ -48,44 +48,52 @@ class Game:
         self.black = ""
         self.black2move = ""
     
-    
+    def validate_piece_choice(self, color: str):
+        if color == "white":
+            self.white = input("Select a white piece: ")
+            while True:
+                if self.white not in location_of_white:
+                    print("Invalid input try again. vader")
+                    self.white = input("Select a white piece: ")
+                else:
+                    break
+        else:
+            self.black = input("Select a black piece: ")
+            while True:
+                if self.black not in location_of_black:
+                    print("Invalid input try again. clan ")
+                    self.black = input("Select a black piece: ")
+                else:
+                    break 
+            
+        
+    def validate_piece_move(self, color: str):
+        if color == "white":
+            self.white2move = input("Select a position to move to: ")
+            while True:    
+                if self.white2move in location_of_white or self.white2move not in algebraic_notation:
+                    print("Invalid input try again. boba ")
+                    self.white2move = input("Select a position to move to: ")
+                else:
+                    break
+        else:
+            self.black2move = input("Select a position to move to: ")
+            while True:   
+                if self.black2move in location_of_black or self.black2move not in algebraic_notation:
+                    print("Invalid input try again. batman")
+                    self.black2move = input("Select a position to move to: ")
+                else:
+                    break
+            
     def turns(self):
-        while True:
-            if self.turn % 2 == 0:
-                self.white = input("Select a white piece: ")
-                while True:
-                    if self.white not in location_of_white:
-                        print("Invalid input try again. ")
-                        self.white = input("Select a white piece: ")
-                    else:
-                        break
-
-                self.white2move = input("Select a position to move to: ")    
-                while True:    
-                    if self.white2move in location_of_white:
-                        print("Invalid input try again. ")
-                        self.white2move = input("Select a position to move to: ")
-                    else:
-                        break
+        if self.turn % 2 == 0:
+            self.validate_piece_choice("white")
+            self.validate_piece_move("white")
                     
-            else:
-                self.black = input("Select a black piece: ")
-                while True:
-                    if self.black not in location_of_black:
-                        print("Invalid input try again. ")
-                        self.black = input("Select a black piece: ")
-                    else:
-                        break 
-                
-                self.black2move = input("Select a position to move to: ")
-                while True:   
-                    if self.black2move in location_of_black:
-                        print("Invalid input try again. ")
-                        self.black2move = input("Select a position to move to: ")
-                    else:
-                        break
-                        
-            break
+        else:
+            self.validate_piece_choice("black")
+            self.validate_piece_move("black")
+            
             
                     
                     
@@ -100,30 +108,58 @@ class Game:
     def move_piece(self):
         if self.turn % 2 == 0:
             w = self.find_piece(self.white)
+            y = algebraic_notation[self.white2move]
             if w.is_valid_move(self.white, self.white2move):
-                w.update_piece_position(self.white2move)
-                self.game.update_board(self.white, self.white2move)
-            else:
-                print("Invalid move try again. ")
-                self.turns()
+               
+                if board[y[0]][y[1]] != "-":
+                    del location_of_black[self.white2move]
+                    self.find_piece(self.white2move).position = "-"
                     
+                    
+
+
+                self.game.update_board(self.white, self.white2move)
+                w.update_piece_position(self.white2move)
+                return True
+            else:   
+                print("Invalid move try again.")
+                return False
+                        
         else:
             b = self.find_piece(self.black)
+            y = algebraic_notation[self.black2move]
             if b.is_valid_move(self.black, self.black2move):
+                if board[y[0]][y[1]] != "-":
+                    del location_of_white[self.black2move]
+                    self.find_piece(self.black2move).position = "-"
+                    
+                    
+                   
                 b.update_piece_position(self.black2move)
                 self.game.update_board(self.black, self.black2move)
-            else:
-                print("Invalid move try again. ")
-                self.turns()
+                return True
+            else:  
+                print("Invalid move try again.")
+                return False
     
             
     def play(self):
         while True:
             self.game.display_board()
             self.turns()
-            self.move_piece()
-            self.turn += 1
-            self.game.display_board()
+            if self.move_piece():
+                self.turn += 1
+            
+            
+            
+            
+            
+            
+            
+                
+            
+        
+            
         
         
     

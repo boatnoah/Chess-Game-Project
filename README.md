@@ -11,5 +11,7 @@
 
 #added a main file more, functionality, a working game --- 5/22/23
 
+#added complete functionality to all pieces --- 5/26/23
+
 
 

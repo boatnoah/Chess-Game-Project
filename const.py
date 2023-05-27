@@ -1,3 +1,4 @@
+import types
 # Description: This file contains all the constants used in the game
 board = [
     ["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"],
@@ -10,23 +11,11 @@ board = [
     ["♖", "♘", "♗", "♕", "♔", "♗", "♘", "♖"]
     ] 
 
-starting_position = {"pawn": {"white": ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"], "black": ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"]}, 
-                         "rook": {"white": ["a1", "h1"], "black": ["a8", "h8"]}, 
-                         "knight": {"white": ["b1", "g1"], "black": ["b8", "g8"]}, 
-                         "bishop": {"white": ["c1", "f1"], "black": ["c8", "f8"]}, 
-                         "queen": {"white": ["d1"], "black": ["d8"]}, 
-                         "king": {"white": ["e1"], "black": ["e8"]}}
-    
-current_position = {"pawn": {"white": ["a2", "b2", "c2", "d2", "e2", "f2", "g2", "h2"], "black": ["a7", "b7", "c7", "d7", "e7", "f7", "g7", "h7"]}, 
-                         "rook": {"white": ["a1", "h1"], "black": ["a8", "h8"]}, 
-                         "knight": {"white": ["b1", "g1"], "black": ["b8", "g8"]}, 
-                         "bishop": {"white": ["c1", "f1"], "black": ["c8", "f8"]}, 
-                         "queen": {"white": ["d1"], "black": ["d8"]}, 
-                         "king": {"white": ["e1"], "black": ["e8"]}}
+
 
 location_of_white = {"a2": "pawn", "b2": "pawn", "c2": "pawn", "d2": "pawn", "e2": "pawn", "f2": "pawn", "g2": "pawn", "h2": "pawn", "a1": "rook", "h1": "rook", "b1": "knight", "g1": "knight", "c1": "bishop", "f1": "bishop", "d1": "queen", "e1": "king"}
 location_of_black = {"a7": "pawn", "b7": "pawn", "c7": "pawn", "d7": "pawn", "e7": "pawn", "f7": "pawn", "g7": "pawn", "h7": "pawn", "a8": "rook", "h8": "rook", "b8": "knight", "g8": "knight", "c8": "bishop", "f8": "bishop", "d8": "queen", "e8": "king"}
-    
+  
 algebraic_notation = {    "a8": [0,0], "b8": [0,1], "c8": [0,2], "d8": [0,3], "e8": [0,4], "f8": [0,5], "g8": [0,6], "h8": [0,7],
                           "a7": [1,0], "b7": [1,1], "c7": [1,2], "d7": [1,3], "e7": [1,4], "f7": [1,5], "g7": [1,6], "h7": [1,7],
                           "a6": [2,0], "b6": [2,1], "c6": [2,2], "d6": [2,3], "e6": [2,4], "f6": [2,5], "g6": [2,6], "h6": [2,7],
@@ -41,4 +30,3 @@ algebraic_notation = {    "a8": [0,0], "b8": [0,1], "c8": [0,2], "d8": [0,3], "e
 black_pieces = ["♟", "♜", "♞", "♝", "♛", "♚"]
 white_piceces = ["♙", "♖", "♘", "♗", "♕", "♔"]
 
-moves_played = []

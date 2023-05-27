@@ -24,15 +24,12 @@ class Board:
     def update_board(self, position: str, position2move: str):
         current_position = algebraic_notation[position] 
         position_to_move = algebraic_notation[position2move]
+        global board
         
         board[position_to_move[0]][position_to_move[1]] = board[current_position[0]][current_position[1]]
         board[current_position[0]][current_position[1]] = "-"
         
-        
-        
-        
-     
-        
+       
 
         
 
