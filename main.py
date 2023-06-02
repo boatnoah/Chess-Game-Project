@@ -325,12 +325,14 @@ class Game:
                        for i in temp:
                            black_moves.append(i)
                      
-    
-        if len(king.legal_moves()) == 0:
+        king_moves = king.legal_moves()
+        if len(king_moves) == 0:
             for m in white_moves:
                 if m in black_moves:
-                    return False
-        return True
+                    return True
+                
+        
+        return False
         
     def play(self):
         while True:
