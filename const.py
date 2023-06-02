@@ -1,4 +1,4 @@
-import types
+
 # Description: This file contains all the constants used in the game
 board = [
     ["♜", "♞", "♝", "♛", "♚", "♝", "♞", "♜"],
@@ -28,5 +28,5 @@ algebraic_notation = {    "a8": [0,0], "b8": [0,1], "c8": [0,2], "d8": [0,3], "e
 
 
 black_pieces = ["♟", "♜", "♞", "♝", "♛", "♚"]
-white_piceces = ["♙", "♖", "♘", "♗", "♕", "♔"]
+white_pieces = ["♙", "♖", "♘", "♗", "♕", "♔"]
 

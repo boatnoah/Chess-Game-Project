@@ -29,7 +29,11 @@ class Board:
         board[position_to_move[0]][position_to_move[1]] = board[current_position[0]][current_position[1]]
         board[current_position[0]][current_position[1]] = "-"
         
-       
+    
+ 
+        
+        
+        
 
         
 

@@ -13,5 +13,11 @@
 
 #added complete functionality to all pieces --- 5/26/23
 
+#added checks and check mate --- 6/1/23
+
+Challenges
+------------
+....
+
 
 
