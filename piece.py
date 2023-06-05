@@ -7,7 +7,6 @@ class Piece:
     def __init__(self, color: str, position: str, piece_type: str):
         self.color = color
         self.position = position
-        self.is_in_check = False
         self.piece_type = piece_type
     
     def update_piece_position(self, position: str):

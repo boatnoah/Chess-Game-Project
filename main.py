@@ -49,13 +49,14 @@ class Game:
         self.white2move = ""
         self.black = ""
         self.black2move = ""
+        self.check_piece = ""
     
     def validate_piece_choice(self, color: str):
         if color == "white":
             self.white = input("Select a white piece: ")
             while True:
                 if self.white not in location_of_white:
-                    print("Invalid input try again. vader")
+                    print("Invalid input try again.")
                     self.white = input("Select a white piece: ")
                 else:
                     break
@@ -82,7 +83,7 @@ class Game:
             self.black2move = input("Select a position to move to: ")
             while True:   
                 if self.black2move in location_of_black or self.black2move not in algebraic_notation:
-                    print("Invalid input try again. batman")
+                    print("Invalid input try again.")
                     self.black2move = input("Select a position to move to: ")
                 else:
                     break
@@ -113,90 +114,102 @@ class Game:
         if self.turn % 2 == 0:
             w = self.find_piece(self.white)
             y = algebraic_notation[self.white2move]
-            if w.piece_type == "king":
-                if w.is_valid_move(self.white, self.white2move):
-                    if board[y[0]][y[1]] != "-":
-                        del location_of_black[self.white2move]
-                        self.find_piece(self.white2move).position = "-"
+        
+            if self.test_board(self.white, self.white2move): #this ensures that pinned pieces cannot move
+                if w.piece_type == "king":
+                    if w.is_valid_move(self.white, self.white2move): #a bit redundant but it works
+                        if board[y[0]][y[1]] != "-":
+                            del location_of_black[self.white2move]
+                            self.find_piece(self.white2move).position = "-"
+                            
+                            
+                        w.update_piece_position(self.white2move)
+                        self.game.update_board(self.white, self.white2move)
+                        return True
+                    else:   
+                        boolean_or_list = w.can_castle(self.white2move)
+                        if boolean_or_list == False:
+                            print("Invalid move try again.")
+                            return False 
+                        else:
+                            king = self.find_piece(self.white)
+                            rook = self.find_piece(boolean_or_list[2])
+                            king.update_piece_position(boolean_or_list[1])
+                            rook.update_piece_position(boolean_or_list[3])
+                            self.game.update_board(boolean_or_list[0], boolean_or_list[1])
+                            self.game.update_board(boolean_or_list[2], boolean_or_list[3])
+                            return True
+                    
+                else: 
+                    if w.is_valid_move(self.white, self.white2move):
+                        if w.piece_type == "pawn":
+                            w.move_two_spaces = False
+                            
+                        if board[y[0]][y[1]] != "-":
+                            del location_of_black[self.white2move]
+                            self.find_piece(self.white2move).position = "-"
                         
-                        
-                    w.update_piece_position(self.white2move)
-                    self.game.update_board(self.white, self.white2move)
-                    return True
-                else:   
-                    boolean_or_list = w.can_castle(self.white2move)
-                    if boolean_or_list == False:
+                        w.update_piece_position(self.white2move)    
+                        self.game.update_board(self.white, self.white2move)
+                        return True
+                    else:   
                         print("Invalid move try again.")
                         return False 
-                    else:
-                        king = self.find_piece(self.white)
-                        rook = self.find_piece(boolean_or_list[2])
-                        king.update_piece_position(boolean_or_list[1])
-                        rook.update_piece_position(boolean_or_list[3])
-                        self.game.update_board(boolean_or_list[0], boolean_or_list[1])
-                        self.game.update_board(boolean_or_list[2], boolean_or_list[3])
-                        return True
-                
-            else: 
-                if w.is_valid_move(self.white, self.white2move):
-                    if w.piece_type == "pawn":
-                        w.move_two_spaces = False
-                        
-                    if board[y[0]][y[1]] != "-":
-                        del location_of_black[self.white2move]
-                        self.find_piece(self.white2move).position = "-"
-                    
-                    w.update_piece_position(self.white2move)    
-                    self.game.update_board(self.white, self.white2move)
-                    return True
-                else:   
-                    print("Invalid move try again.")
-                    return False                  
+            else:
+                print("Invalid move try again.")
+                return False
+                            
         else:
             b = self.find_piece(self.black)
             y = algebraic_notation[self.black2move]
-            if b.piece_type == "king":
-                if b.is_valid_move(self.black, self.black2move):
-                    if board[y[0]][y[1]] != "-":
-                        del location_of_white[self.black2move]
-                        self.find_piece(self.black2move).position = "-"
+            
+            if self.test_board(self.black, self.black2move): #this ensures that pinned pieces cannot move
+                if b.piece_type == "king":
+                    if b.is_valid_move(self.black, self.black2move): 
+                        if board[y[0]][y[1]] != "-":
+                            del location_of_white[self.black2move]
+                            self.find_piece(self.black2move).position = "-"
+                            
+                            
                         
-                        
-                    
-                    b.update_piece_position(self.black2move)
-                    self.game.update_board(self.black, self.black2move)
-                    return True
-                else:
-                    boolean_or_list = b.can_castle(self.black2move)
-                    if boolean_or_list == False:
-                        print("Invalid move try again.")
-                        return False 
-                    else:
-                        king = self.find_piece(self.black)
-                        rook = self.find_piece(boolean_or_list[2])
-                        king.update_piece_position(boolean_or_list[1])
-                        rook.update_piece_position(boolean_or_list[3])
-                        self.game.update_board(boolean_or_list[0], boolean_or_list[1])
-                        self.game.update_board(boolean_or_list[2], boolean_or_list[3])
+                        b.update_piece_position(self.black2move)
+                        self.game.update_board(self.black, self.black2move)
                         return True
+                    else:
+                        boolean_or_list = b.can_castle(self.black2move)
+                        if boolean_or_list == False:
+                            print("Invalid move try again.")
+                            return False 
+                        else:
+                            king = self.find_piece(self.black)
+                            rook = self.find_piece(boolean_or_list[2])
+                            king.update_piece_position(boolean_or_list[1])
+                            rook.update_piece_position(boolean_or_list[3])
+                            self.game.update_board(boolean_or_list[0], boolean_or_list[1])
+                            self.game.update_board(boolean_or_list[2], boolean_or_list[3])
+                            return True
+                            
+                else:
+                    if b.is_valid_move(self.black, self.black2move):
+                        if b.piece_type == "pawn":
+                            b.move_two_spaces = False
+                            
+                        if board[y[0]][y[1]] != "-":
+                            del location_of_white[self.black2move]
+                            self.find_piece(self.black2move).position = "-"
+                            
+                            
                         
+                        b.update_piece_position(self.black2move)
+                        self.game.update_board(self.black, self.black2move)
+                        return True
+                    else:  
+                        print("Invalid move try again.")
+                        return False
             else:
-                if b.is_valid_move(self.black, self.black2move):
-                    if b.piece_type == "pawn":
-                        b.move_two_spaces = False
-                        
-                    if board[y[0]][y[1]] != "-":
-                        del location_of_white[self.black2move]
-                        self.find_piece(self.black2move).position = "-"
-                        
-                        
-                    
-                    b.update_piece_position(self.black2move)
-                    self.game.update_board(self.black, self.black2move)
-                    return True
-                else:  
-                    print("Invalid move try again.")
-                    return False
+                print("Invalid move try again.")
+                return False
+                
                 
     def test_board(self, position, position2move):
         #the purpose of this function to play the scenario out on a copy board and see if the king is in check or not. This can also help determine checkmates for future use.
@@ -251,18 +264,29 @@ class Game:
                         return False
             return True
         
+        #This method returns true if the king is not in check and false if the king is in check
                 
             
             
-        
-        
-        
-        
+    def checkmate(self):
+        if self.turn % 2 == 0:
+            for p in self.ALL_PIECES:
+                if p.color == "white" and p.position != "-":
+                    moves = p.legal_moves()
+                    for m in moves:
+                        if self.test_board(p.position, p.get_keys(m)):
+                            return False
+                    
+        else:
+            for p in self.ALL_PIECES:
+                if p.color == "black" and p.position != "-":
+                    moves = p.legal_moves()
+                    for m in moves:
+                        if self.test_board(p.position, p.get_keys(m)):
+                            return False
+                        
+        return True
             
-            
-            
-                
-       
         
     def is_check(self):
         if self.white != "" and self.black != "": 
@@ -270,16 +294,18 @@ class Game:
                 curr_king_pos = algebraic_notation[self.Wking.position][:]
                 
                 for p in self.ALL_PIECES:
-                    if p.color == "black":
+                    if p.color == "black" and p.position != "-":
                         if curr_king_pos in p.legal_moves():
+                            self.check_piece = p
                             return True
                 return False
             
             else:
                 curr_king_pos = algebraic_notation[self.Bking.position][:]
                 for p in self.ALL_PIECES:
-                    if p.color == "white":
+                    if p.color == "white" and p.position != "-":
                         if curr_king_pos in p.legal_moves():
+                            self.check_piece = p
                             return True
                 return False
         else:
@@ -293,47 +319,7 @@ class Game:
             self.turn += 1           
           
             
-    def checkmate(self):
-        #check for legal moves of king and if there are none then check if any piece can block the check or take the piece that is checking the king
-        if self.turn % 2 == 0:
-           king = self.Wking
-           white_moves = []
-           black_moves = []
-           for p in self.ALL_PIECES:
-               if p.color == "white" and p.position != "-":
-                   temp = p.legal_moves()
-                   for i in temp:
-                       white_moves.append(i)
-               else:
-                   if p.position != "-":
-                       temp = p.legal_moves()
-                       for i in temp:
-                           black_moves.append(i)
-                   
-        else:
-            king = self.Bking
-            white_moves = []
-            black_moves = []
-            for p in self.ALL_PIECES:
-               if p.color == "white" and p.position != "-":
-                   temp = p.legal_moves()
-                   for i in temp:
-                       white_moves.append(i)
-               else:
-                   if p.position != "-":
-                       temp = p.legal_moves()
-                       for i in temp:
-                           black_moves.append(i)
-                     
-        king_moves = king.legal_moves()
-        if len(king_moves) == 0:
-            for m in white_moves:
-                if m in black_moves:
-                    return True
-                
-        
-        return False
-        
+     
     def play(self):
         while True:
             self.pace()
