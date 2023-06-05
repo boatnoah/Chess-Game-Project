@@ -117,7 +117,7 @@ class Game:
         
             if self.test_board(self.white, self.white2move): #this ensures that pinned pieces cannot move
                 if w.piece_type == "king":
-                    if w.is_valid_move(self.white, self.white2move): #a bit redundant but it works
+                    if w.is_valid_move(self.white, self.white2move):  
                         if board[y[0]][y[1]] != "-":
                             del location_of_black[self.white2move]
                             self.find_piece(self.white2move).position = "-"
@@ -141,7 +141,7 @@ class Game:
                             return True
                     
                 else: 
-                    if w.is_valid_move(self.white, self.white2move):
+                    if w.is_valid_move(self.white, self.white2move): #this ensures that pieces are moving correctly even if the sequence of moves does not put the player in check
                         if w.piece_type == "pawn":
                             w.move_two_spaces = False
                             
