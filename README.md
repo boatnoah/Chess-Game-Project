@@ -35,10 +35,10 @@ As of 6/4/23 this game does not have:
 How to Play:
 Played locally on the terminal where it takes text input to choose and move pieces using alegabraic notation.
 EX:
--Select a white piece: e2
--Select a position to move to: e4
+- Select a white piece: e2
+- Select a position to move to: e4
 
--Select a black piece: e7
--Select a position to move to: e5
+- Select a black piece: e7
+- Select a position to move to: e5
 
 
